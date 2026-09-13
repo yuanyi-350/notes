@@ -6,7 +6,7 @@ export const siteConfig: { title: string; courses: CourseConfig[] } = {
     {
       id: 'numerical-analysis',
       title: '数值分析',
-      notesDirectory: 'content/numerical_analysis',
+      notesDirectory: 'content/numerical-analysis',
       // Keep the original links working.
       routePrefix: '',
       chapters: {
