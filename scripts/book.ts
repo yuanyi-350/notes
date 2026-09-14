@@ -18,7 +18,7 @@ export async function walk(directory: string): Promise<string[]> {
 export const isNote = (file: string) => /\.md$/i.test(file) && !/^(AGENTS|CLAUDE|SKILL)\.md$/i.test(basename(file))
 const portable = (path: string) => path.split('\\').join('/')
 
-export async function loadBook(config: CourseConfig = siteConfig.courses[0]): Promise<Note[]> {
+export async function loadBook(config: CourseConfig): Promise<Note[]> {
   const directory = resolve(config.notesDirectory)
   const allFiles = await walk(directory)
   const files = allFiles.filter(file => isNote(file) && !config.exclude?.includes(portable(relative(directory, file)))).sort((a, b) => {
@@ -40,24 +40,20 @@ export async function loadBook(config: CourseConfig = siteConfig.courses[0]): Pr
     const localSlug = slugs.slug(String(parsed.data.slug || (section ? `section-${number.replaceAll('.', '-')}` : base.replaceAll('/', '-'))))
     const slug = config.routePrefix + localSlug
     if (!slug || slug === 'index' || slug === '404' || /[/.\\]/.test(slug)) throw new Error(`笔记的 slug 无效或保留：${fileName}`)
-    const summary: NoteSummary = { slug, number, chapter: String(parsed.data.chapter || entry?.chapter || number.split('.')[0]), title, fileName, href: `./${slug}.html` }
+    const summary: NoteSummary & { fileName: string } = { slug, number, chapter: String(parsed.data.chapter || entry?.chapter || number.split('.')[0]), title, fileName, href: `./${slug}.html` }
     const content = heading ? parsed.content.replace(/^#\s+.+\r?\n?/m, '') : parsed.content
     return { summary, content }
   }))
   return Promise.all(sources.map(async ({ summary, content }) => {
     const from = dirname(resolve(directory, summary.fileName))
     const links = new Map(sources.map(source => [portable(relative(from, resolve(directory, source.summary.fileName))), source.summary.href]))
-    for (const [oldName, newName] of Object.entries(config.aliases || {})) {
-      const target = sources.find(source => source.summary.fileName === newName)
-      if (target) links.set(portable(relative(from, resolve(directory, oldName))), target.summary.href)
-    }
     for (const file of allFiles.filter(file => !/\.md$/i.test(file))) {
       const assetPath = portable(relative(directory, file))
       const href = `./source/${config.id}/${assetPath.split('/').map(encodeURIComponent).join('/')}`
       links.set(portable(relative(from, file)), href)
       links.set(`asset:${basename(file)}`, href)
     }
-    return { ...summary, ...await compileMarkdown(content, summary.number, links) }
+    return { ...summary, ...await compileMarkdown(content, links) }
   }))
 }
 
@@ -85,10 +81,11 @@ export function homeData(library: Course[]): HomeData {
   return { kind: 'home', title: siteConfig.title, courses: courseSummaries(library) }
 }
 
-export function pageData(library: Course[], course: Course, note: Note): PageData {
+const noteSummary = ({ slug, title, number, chapter, href }: Note): NoteSummary => ({ slug, title, number, chapter, href })
+
+export function pageData(course: Course, note: Note): PageData {
   return {
-    kind: 'note', site: { title: siteConfig.title, bookTitle: course.config.title, chapters: course.config.chapters },
-    courseId: course.config.id, courses: courseSummaries(library),
-    notes: course.notes.map(({ html: _html, equationCount: _eq, warnings: _warnings, ...summary }) => summary), note,
+    kind: 'note', site: { bookTitle: course.config.title, chapters: course.config.chapters },
+    notes: course.notes.map(noteSummary), note: { ...noteSummary(note), html: note.html },
   }
 }

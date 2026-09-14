@@ -6,7 +6,6 @@ export interface CourseConfig {
   chapters: Record<string, string>
   exclude?: string[]
   entries?: Record<string, { title?: string; number?: string; chapter?: string; order?: number }>
-  aliases?: Record<string, string>
 }
 export interface CourseSummary { id: string; title: string; href: string; noteCount: number; topics: string[] }
 export interface Course { config: CourseConfig; notes: Note[] }
@@ -15,21 +14,19 @@ export interface NoteSummary {
   title: string
   number: string
   chapter: string
-  fileName: string
   href: string
 }
 export interface Note extends NoteSummary {
+  fileName: string
   html: string
   equationCount: number
   warnings: string[]
 }
 export interface PageData {
   kind: 'note'
-  site: { title: string; bookTitle: string; chapters: Record<string, string> }
-  courseId: string
-  courses: CourseSummary[]
+  site: { bookTitle: string; chapters: Record<string, string> }
   notes: NoteSummary[]
-  note: Note
+  note: NoteSummary & { html: string }
 }
 export interface HomeData { kind: 'home'; title: string; courses: CourseSummary[] }
 export type SitePageData = PageData | HomeData

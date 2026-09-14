@@ -21,7 +21,7 @@ export async function renderRequest(template: string, url: string) {
   if (requested === '' || requested === 'index') return renderPage(template, homeData(library))
   for (const course of library) {
     const note = course.notes.find(note => note.slug === requested)
-    if (note) return renderPage(template, pageData(library, course, note))
+    if (note) return renderPage(template, pageData(course, note))
   }
   return null
 }

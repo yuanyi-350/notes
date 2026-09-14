@@ -61,8 +61,9 @@ svg { flex-shrink: 0; }
 .markdown-body h2:first-child { margin-top: 0; }
 .heading-anchor { opacity: 0; margin-left: 10px; font: 400 .8em Georgia, serif; color: #999; }
 :is(h1, h2, h3, h4, h5, h6):hover .heading-anchor, .heading-anchor:focus { opacity: 1; }
-.markdown-body strong { font-weight: 700; color: #303030; }
-.markdown-body a:not(.heading-anchor) { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #aaa; }
+.markdown-body strong { font-weight: 800; font-synthesis: weight; color: #242424; }
+.markdown-body a:not(.heading-anchor) { color: #1769c2; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: currentColor; }
+.markdown-body a:not(.heading-anchor):hover { color: #0b4f9c; }
 .markdown-body hr { height: 1px; border: 0; background: var(--line); margin: 34px 0; }
 /* KaTeX owns its internal font sizes and positioning. Only size the outer formula. */
 .markdown-body .katex { font-size: 1.07em; }
@@ -72,10 +73,7 @@ svg { flex-shrink: 0; }
 .markdown-body .katex-html { overflow-wrap: normal; }
 .markdown-body .inline-math-overflow { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; vertical-align: middle; padding: .3em 0; scrollbar-width: thin; }
 .markdown-body .katex-error { color: #9c402d; font-family: monospace; white-space: pre-wrap; }
-.markdown-body .math-block { margin: 28px 0; padding: 0; }
-.markdown-body .math-block > :first-child { margin-top: 0; }
-.markdown-body .math-block > :last-child { margin-bottom: 0; }
-.markdown-body .note-emphasis { color: #a1433c; }
+.markdown-body .note-emphasis { color: #d6251f; }
 .markdown-body mark { background-color: #ff0; color: inherit; }
 .markdown-body ul, .markdown-body ol { padding-left: 25px; margin: 18px 0; }
 .markdown-body li { margin: 6px 0; padding-left: 3px; }
@@ -84,7 +82,7 @@ svg { flex-shrink: 0; }
 .markdown-body code { font: 13px/1.7 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
 .markdown-body :not(pre) > code { background: #f5f5f5; padding: 2px 5px; }
 .markdown-body pre code { padding: 0; background: transparent; }
-.markdown-body img { max-width: 100%; height: auto; zoom: var(--note-image-scale, 1); }
+.markdown-body img { display: block; max-width: 100%; height: auto; margin-left: auto; margin-right: auto; zoom: var(--note-image-scale, 1); }
 .markdown-body table { display: block; overflow: auto; max-width: 100%; border-collapse: collapse; font-size: 14px; margin: 24px 0; }
 .markdown-body th, .markdown-body td { border: 1px solid var(--line); padding: 9px 14px; }
 .markdown-body th { background: #fafafa; }
@@ -149,6 +147,5 @@ svg { flex-shrink: 0; }
   .reading-layout { display: block; margin: 0; padding: 0; max-width: none; }
   .markdown-body { font-size: 11pt; }
   .markdown-body .katex-display { overflow: visible; font-size: .85em; }
-  .markdown-body .math-block { break-inside: avoid; }
   .page-heading h1 { font-size: 24pt; }
 }

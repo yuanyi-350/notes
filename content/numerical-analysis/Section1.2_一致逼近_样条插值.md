@@ -31,7 +31,7 @@ $$
 
 ----
 
-**Weisterstrass 逼近定理.** 设 $f \in C[a, b]$ 则 $\forall \varepsilon>0. \exists$  多项式 $p(x)$ 使得 $\|f-p\|_\infty \le \varepsilon$ .
+**[Weisterstrass 逼近定理](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Topology/ContinuousMap/Weierstrass.html).** 设 $f \in C[a, b]$ 则 $\forall \varepsilon>0. \exists$  多项式 $p(x)$ 使得 $\|f-p\|_\infty \le \varepsilon$ .
 
 **证明.** 设 $[a, b]=[0,1]$ , 令 $p_n(x)=\sum\limits_{k=0}^n C_n^k x^k(1-x)^{n k} f\left(\frac{k}n\right)$ , 往证 $\left\|p_n-f\right\|_\infty \to 0$ .
 

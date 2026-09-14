@@ -34,5 +34,26 @@ export const siteConfig: { title: string; courses: CourseConfig[] } = {
         'Section7_TheSeifert-vanKampenTheorem.md': { title: 'Seifert–van Kampen 定理' },
       },
     },
+    {
+      id: 'real-analysis',
+      title: '实变函数',
+      notesDirectory: 'content/real-analysis',
+      routePrefix: 'real-',
+      chapters: {
+        '1': '依测度收敛',
+        '2': 'Lebesgue 积分',
+        '3': 'Lebesgue 密度定理',
+        '4': '单调函数的 Lebesgue 微分定理',
+        '5': '绝对连续函数与 Lp 空间',
+      },
+      entries: {
+        'Section0_依测度Cauchy列.md': { title: '依测度 Cauchy 列' },
+        'Section1_Lebesgue_Integration.md': { title: 'Lebesgue 积分' },
+        'Section3_Lebesgue密度定理.md': { title: 'Lebesgue 密度定理' },
+        'Section4_单调函数Lebesgue定理.md': { title: '单调函数的 Lebesgue 微分定理' },
+        'Section5_绝对连续函数Lebesgue定理.md': { title: '绝对连续函数的 Lebesgue 微分定理' },
+        'Section5.5_Lp空间.md': { title: 'Lp 空间' },
+      },
+    },
   ],
 }

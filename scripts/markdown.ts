@@ -2,7 +2,6 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
-import remarkDirective from 'remark-directive'
 import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -10,18 +9,13 @@ import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import { visit } from 'unist-util-visit'
-import { toString } from 'mdast-util-to-string'
 import { toText } from 'hast-util-to-text'
 import GithubSlugger from 'github-slugger'
-import type { Root as MdRoot, Paragraph, Strong } from 'mdast'
+import type { Root as MdRoot, Paragraph } from 'mdast'
 import type { Root as HtmlRoot, Element } from 'hast'
 import { normalizeMathDelimiters } from './math-delimiters'
 
-const labels: Record<string, string> = {
-  theorem: '定理', lemma: '引理', proposition: '命题', corollary: '推论',
-  definition: '定义', example: '例', remark: '注', proof: '证明',
-}
-export async function compileMarkdown(source: string, _number: string, links: Map<string, string> = new Map()) {
+export async function compileMarkdown(source: string, links: Map<string, string>) {
   const normalized = normalizeMathDelimiters(source)
   let equationCount = 0
   const slugger = new GithubSlugger()
@@ -60,27 +54,6 @@ export async function compileMarkdown(source: string, _number: string, links: Ma
           if (offset < child.value.length) children.push({ type: 'text', value: child.value.slice(offset) })
           return children
         })
-      })
-
-      // Only explicitly authored directives create blocks. Ordinary bold text,
-      // theorem labels, steps and headings keep their original Markdown layout.
-      visit(tree, 'containerDirective', node => {
-        const kind = node.name
-        if (!(kind in labels)) return
-        const firstData = node.children[0]?.data as { directiveLabel?: boolean } | undefined
-        const labelNode = firstData?.directiveLabel ? node.children.shift() : undefined
-        const title = labelNode ? toString(labelNode) : ''
-        node.data = {
-          hName: 'section',
-          hProperties: {
-            className: ['math-block', `math-${kind}`],
-            ...(node.attributes?.id ? { id: node.attributes.id } : {}),
-          },
-        }
-        const caption: Strong = { type: 'strong', children: [{ type: 'text', value: labels[kind] + (title ? ` · ${title}` : '') }] }
-        const first = node.children[0]
-        if (first?.type === 'paragraph') first.children.unshift(caption, { type: 'text', value: ' ' })
-        else node.children.unshift({ type: 'paragraph', children: [caption] } as Paragraph)
       })
       visit(tree, 'math', () => { equationCount++ })
       visit(tree, node => {
@@ -129,7 +102,7 @@ export async function compileMarkdown(source: string, _number: string, links: Ma
   }
 
   const result = await unified()
-    .use(remarkParse).use(remarkGfm).use(remarkMath).use(remarkDirective)
+    .use(remarkParse).use(remarkGfm).use(remarkMath)
     .use(markdownCompatibility).use(remarkRehype, { allowDangerousHtml: true }).use(rehypeRaw)
     .use(typoraImages)
     .use(rehypeSanitize, {
@@ -140,7 +113,6 @@ export async function compileMarkdown(source: string, _number: string, links: Ma
         '*': [...(defaultSchema.attributes?.['*'] || []), 'className'],
         code: [...(defaultSchema.attributes?.code || []), ['className', /^language-./, 'math-inline', 'math-display']],
         img: [...(defaultSchema.attributes?.img || []), ['style', /^--note-image-scale:[\d.e+-]+$/]],
-        section: ['className', 'id'],
       },
     })
     .use(anchors)

@@ -8,7 +8,7 @@ const template = await readFile('dist/index.html', 'utf8')
 await writeFile('dist/index.html', renderPage(template, homeData(library)))
 for (const course of library) {
   for (const note of course.notes) {
-    await writeFile(`dist/${note.slug}.html`, renderPage(template, pageData(library, course, note)))
+    await writeFile(`dist/${note.slug}.html`, renderPage(template, pageData(course, note)))
     if (note.warnings.length) console.warn(`${note.fileName}:\n${note.warnings.join('\n')}`)
   }
   const root = resolve(course.config.notesDirectory)
