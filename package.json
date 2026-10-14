@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "tsx --test scripts/*.test.ts",
     "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
     "build": "tsc --noEmit && vite build && tsx scripts/export.tsx",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",

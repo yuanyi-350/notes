@@ -100,5 +100,42 @@ export const siteConfig: { title: string; courses: CourseConfig[] } = {
         'Section8_CLT.md': { title: '中心极限定理' },
       },
     },
+    {
+      id: 'machine-learning-systems',
+      title: 'Machine Learning & Systems',
+      notesDirectory: 'content/machine-learning-systems',
+      routePrefix: 'ml-',
+      chapters: {
+        'deep-learning': 'Deep Learning',
+        'ai-infra': 'AI Infra',
+        'rl': 'Reinforcement Learning',
+      },
+      entries: {
+        'section-3-PolicyGradients_ActorCritic.md': {
+          title: 'Policy Gradients and Actor-Critic', number: '1', chapter: 'rl',
+          resources: ['cs285-rl'],
+          sourceUrl: 'http://rail.eecs.berkeley.edu/deeprlcourse/static/sections/section-3.pdf',
+        },
+        'section-5-Off-Policy.md': {
+          title: 'Advanced Policy Gradients', number: '2', chapter: 'rl',
+          resources: ['cs285-rl'],
+          sourceUrl: 'http://rail.eecs.berkeley.edu/deeprlcourse/static/sections/section-5.pdf',
+        },
+      },
+      resources: [
+        {
+          id: 'llm-basics', title: 'CS336 LLM from Scratch · Basics', chapter: 'deep-learning',
+          url: 'https://github.com/yuanyi-350/llm-from-scratch-assignment1-basics',
+        },
+        {
+          id: 'llm-systems', title: 'CS336 LLM from Scratch · Systems', chapter: 'ai-infra',
+          url: 'https://github.com/yuanyi-350/lcpu-llm-from-scratch-assignment2-systems',
+        },
+        {
+          id: 'cs285-rl', title: 'CS285 RL 2026', chapter: 'rl',
+          url: 'https://github.com/yuanyi-350/CS285_RL_2026',
+        },
+      ],
+    },
   ],
 }

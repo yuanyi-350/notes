@@ -1,11 +1,11 @@
 # AGENTS.md
 
-数学课程笔记静态网站（React + TypeScript + Vite）。Markdown 笔记放在 `content/<课程>/`，由 `scripts/` 编译成静态 HTML；课程索引、章节名称、路由前缀统一配置在 `site.config.ts`。
+课程笔记与网页资源静态网站（React + TypeScript + Vite）。Markdown 笔记放在 `content/<课程>/`，由 `scripts/` 编译成静态 HTML；课程索引、章节名称、路由前缀、网页资源与笔记关联统一配置在 `site.config.ts`。
 
 ## 项目目录
 
 ```text
-/Users/yuanyi/Documents/ChatGPT/front-end
+/Users/yuanyi/Documents/Math/front-end
 ```
 
 以下命令均在此目录执行。
@@ -42,6 +42,9 @@ npm run preview
 
 - `content/<课程>/`：课程笔记。`Section<编号>_<标题>.md` 命名会自动解析编号（如 `Section5.2_xxx.md` → 编号 5.2、归入第 5 章）；图片等附件放在课程目录（推荐 `figures/`），笔记内用相对路径引用。
 - `site.config.ts`：唯一需要维护的索引。数组顺序即课程首页顺序。
+- 课程的 `resources` 登记网页资源（id、title、url，可选 chapter）；资源有独立站内页，正文仅显示原站链接及相关笔记，在新标签页访问原站。不指定 chapter 时归入「代码与资源」。
+- 笔记的 `entries[文件名].resources` 填写该课程内的资源 id，可多篇笔记关联同一仓库；资源页自动反向列出相关笔记。`sourceUrl` 是笔记的原始讲义链接，显示在标题下；这些配置不需要改动 Markdown 原文。
+- 课程可以只有网页资源，此时省略 `notesDirectory`。同主题下先显示笔记，再显示网页资源；数字章节按编号排列，命名章节遵循 `chapters`，资源按数组顺序排列。
 - `src/`：React 前端；`scripts/`：Markdown 编译与静态导出逻辑。
 - `dist/`：生成产物，不要手动编辑，也不要提交。
 
@@ -49,7 +52,7 @@ npm run preview
 
 ## 验证与注意
 
-- 修改配置或内容后运行 `npm run build` 做完整校验；slug 冲突、无效课程 id 会直接报错。
+- 修改配置或内容后运行 `npm run build` 做完整校验；slug 冲突、无效课程或资源 id、无效 HTTP(S) 链接、缺失的资源关联会直接报错。
 - dev server 会监听 `content/` 变化并自动刷新；改 `site.config.ts` 后如未生效，重启 dev server。
 - UI 文案与文档使用中文；数学公式用 `$...$` / `$$...$$`。
 - `AGENTS.md`、`CLAUDE.md`、`SKILL.md` 不会被当作笔记收录。

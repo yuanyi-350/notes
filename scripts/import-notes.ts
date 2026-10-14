@@ -8,6 +8,7 @@ const courseFlag = args.indexOf('--course')
 const courseId = courseFlag < 0 ? siteConfig.courses[0].id : args.splice(courseFlag, 2)[1]
 const course = siteConfig.courses.find(course => course.id === courseId)
 if (!course) throw new Error(`课程不存在：${courseId}。请先在 site.config.ts 中配置课程。`)
+if (!course.notesDirectory) throw new Error(`课程未配置 notesDirectory：${courseId}。请先设置笔记目录。`)
 const argument = args.find(value => !value.startsWith('--'))
 if (!argument) throw new Error('用法：npm run import:notes -- /笔记目录 [--course 课程id] [--overwrite]')
 const source = resolve(argument)

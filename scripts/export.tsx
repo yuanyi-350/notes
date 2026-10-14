@@ -7,10 +7,11 @@ const library = await loadLibrary()
 const template = await readFile('dist/index.html', 'utf8')
 await writeFile('dist/index.html', renderPage(template, homeData(library)))
 for (const course of library) {
-  for (const note of course.notes) {
-    await writeFile(`dist/${note.slug}.html`, renderPage(template, pageData(course, note)))
-    if (note.warnings.length) console.warn(`${note.fileName}:\n${note.warnings.join('\n')}`)
+  for (const item of course.items) {
+    await writeFile(`dist/${item.slug}.html`, renderPage(template, pageData(course, item)))
+    if (item.kind === 'note' && item.warnings.length) console.warn(`${item.fileName}:\n${item.warnings.join('\n')}`)
   }
+  if (!course.config.notesDirectory) continue
   const root = resolve(course.config.notesDirectory)
   // Only attachments are public assets; Markdown is compiled into HTML.
   for (const file of (await walk(root)).filter(file => !/\.md$/i.test(file))) {
@@ -21,4 +22,4 @@ for (const course of library) {
 }
 await writeFile('dist/.nojekyll', '')
 const notes = library.flatMap(course => course.notes)
-console.log(`已导出 ${library.length} 门课、${notes.length} 篇笔记、${notes.reduce((n, note) => n + note.equationCount, 0)} 个块级公式 → dist/`)
+console.log(`已导出 ${library.length} 门课、${notes.length} 篇笔记、${library.reduce((n, course) => n + course.resources.length, 0)} 个网页资源、${notes.reduce((n, note) => n + note.equationCount, 0)} 个块级公式 → dist/`)

@@ -81,6 +81,13 @@ export async function compileMarkdown(source: string, links: Map<string, string>
       const explicitIds = new Set<string>()
       visit(tree, 'element', node => { if (typeof node.properties.id === 'string') explicitIds.add(node.properties.id) })
       visit(tree, 'element', (node: Element) => {
+        // Imported formulas may group a vertical delimiter as \Big{|}.
+        // Normalize only math elements, leaving notes and code samples intact.
+        if (node.tagName === 'code' && (node.properties.className as string[] | undefined)?.some(name => ['language-math', 'math-inline', 'math-display'].includes(name))) {
+          for (const child of node.children) {
+            if (child.type === 'text') child.value = child.value.replace(/\\(big|Big|bigg|Bigg)([lrm]?)\s*\{\s*(\||\\vert|\\Vert)\s*\}/g, (_, size, side, delimiter) => `\\${size}${side}${delimiter}`)
+          }
+        }
         if (/^h[1-6]$/.test(node.tagName)) {
           const title = toText(node)
           const id = String(node.properties.id || slugger.slug(title))

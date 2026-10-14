@@ -5,8 +5,8 @@ import type { SitePageData } from '../src/types'
 
 const escapeHtml = (text: string) => text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 export function renderPage(template: string, data: SitePageData) {
-  const title = data.kind === 'home' ? data.title : `${data.note.title} · ${data.site.bookTitle}`
-  const description = data.kind === 'home' ? data.courses.map(course => course.title).join('、') : `${data.site.bookTitle} · ${data.note.title}`
+  const title = data.kind === 'home' ? data.title : `${data.entry.title} · ${data.site.bookTitle}`
+  const description = data.kind === 'home' ? data.courses.map(course => course.title).join('、') : `${data.site.bookTitle} · ${data.entry.title}`
   return template.replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(title)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*("\s*\/?>)/, (_, start, end) => start + escapeHtml(description) + end)
     .replace('<!--app-html-->', () => renderToString(<Site data={data} />))
@@ -20,8 +20,8 @@ export async function renderRequest(template: string, url: string) {
   const requested = decodeURIComponent(url.split('?')[0]).replace(/^\//, '').replace(/\.html$/, '')
   if (requested === '' || requested === 'index') return renderPage(template, homeData(library))
   for (const course of library) {
-    const note = course.notes.find(note => note.slug === requested)
-    if (note) return renderPage(template, pageData(course, note))
+    const item = course.items.find(item => item.slug === requested)
+    if (item) return renderPage(template, pageData(course, item))
   }
   return null
 }

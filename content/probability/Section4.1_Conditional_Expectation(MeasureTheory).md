@@ -2,11 +2,11 @@
 
 设 $(\Omega, \mathcal{F}, \mathbb{P})$ 为一个概率空间, $X$ 和 $Y$ 是定义在该空间上的随机变量. $X$ 是Lebesgue可积的.
 
-随机变量 $Y$ 会在 $\Omega$ 上诱导生成一个 $\mathcal{F}$ 的子 $\sigma$-代数, 记为 $ \sigma(Y) = \{Y^{-1}(B) : B \in \mathcal{B}(\R)\} \subseteq \mathcal{F} $
+随机变量 $Y$ 会在 $\Omega$ 上诱导生成一个 $\mathcal{F}$ 的子 $\sigma$-代数, 记为 $\sigma(Y) = \{Y^{-1}(B) : B \in \mathcal{B}(\R)\} \subseteq \mathcal{F}$
 
 定义条件期望 $\mathbb{E}[X|Y]$ 为一个随机变量 $\varphi$ (更严格地说, 是a.s. 意义下的r.v.等价类)
 
-**动机.** 希望 $\varphi(y) = \mathbb{E}(X \mid Y=y) = \int_{-\infty}^{\infty} x \frac{f(x, y)}{f_Y(y)} \, dx$ , 可以将 $Y$ 看成先验, 输入 $Y = y$ 这个条件, 输出期望 $\varphi(y)$ ,
+**动机(不一定严谨).** 希望 $\varphi(y) = \mathbb{E}(X | Y=y) = \int_{-\infty}^\infty x \frac{f(x, y)}{f_Y(y)} \,~dx$ , 可以将 $Y$ 看成先验, 输入 $Y = y$ 这个条件, 输出期望 $\varphi(y)$ ,
 
 于是应满足
 
@@ -21,24 +21,25 @@
 
 
 
-**验证.** 局部积分等式。任意集合 $A \in \sigma(Y)$ 都可以表示为 $A = \{\omega \in \Omega : Y(\omega) \in B\}$，其中 $B$ 是 $\mathbb{R}$ 上的某个 Borel 集。
+**验证.** 局部积分等式. 任意集合 $A \in \sigma(Y)$ 都可以表示为 $A = \{\omega \in \Omega : Y(\omega) \in B\}$, 其中 $B$ 是 $\R$ 上的某个 Borel 集.
 
-计算 $\varphi(Y)$ 在集合 $A$ 上的积分：
+计算 $\varphi(Y)$ 在集合 $A$ 上的积分:
 $$
 \begin{aligned}
 \int_A \varphi(Y) \, d\mathbb{P}
 &= \int_{\{Y \in B\}} \varphi(Y) \, d\mathbb{P} \xlongequal{\text{LOTUS}} \int_B \varphi(y) f_Y(y) \, dy \\
-&= \int_B \left( \int_{-\infty}^{\infty} x \frac{f(x, y)}{f_Y(y)} \, dx \right) f_Y(y) \, dy \\
-&= \int_B \int_{-\infty}^{\infty} x f(x, y) \, dx \, dy 
+&= \int_B \left( \int_{-\infty}^\infty x \frac{f(x, y)}{f_Y(y)} \,~dx \right) f_Y(y) \, dy \\
+&= \int_B \int_{-\infty}^\infty x f(x, y) \,~dx \, dy
 \end{aligned}
 $$
-另一方面，计算 $X$ 在集合 $A$ 上的积分：
+另一方面, 计算 $X$ 在集合 $A$ 上的积分:
 $$
-\int_A X \, d\mathbb{P} = \int_{\{Y \in B\}} X \, d\mathbb{P} = \iint_{x \in \mathbb{R}, y \in B} x f(x, y) \, dx \, dy
+\int_A X \, d\mathbb{P} = \int_{\{Y \in B\}} X \, d\mathbb{P} = \iint_{x \in \R, y \in B} x f(x, y) \,~dx \, dy
 $$
 
 
-**重期望公式.** 设 $\mathbb{E}X$ 存在且有限, 则 $\mathbb{E} X = \mathbb{EE}(X | Y)$.
+
+**性质1.(重期望公式)** 设 $\mathbb{E}X$ 存在且有限, 则 $\mathbb{E} X = \mathbb{EE}(X | Y)$.
 
 **证明.** 观察局部积分等式: $\forall A \in \sigma(Y), \int_A Z \, \mathrm{d}\mathbb{P} = \int_A X \, \mathrm{d}\mathbb{P}$.
 
@@ -50,9 +51,9 @@ $$
 
 
 
-**引理.** 如果 $\tau$ 是 $\sigma(X)$ 可测的, 则 $\mathbb{E}(\tau Y | X) = \tau \cdot \mathbb{E}(Y|X)$
+**性质2.** 如果 $\tau$ 是 $\sigma(X)$ 可测的, 则 $\mathbb{E}(\tau Y | X) = \tau \cdot \mathbb{E}(Y|X)$
 
-根据条件期望的定义, 只需验证 $\tau \cdot \mathbb{E}(Y|X)$ 是 $\sigma(X)$ 可测的(显然) 并且
+**证明.** 根据条件期望的定义, 只需验证 $\tau \cdot \mathbb{E}(Y|X)$ 是 $\sigma(X)$ 可测的(显然) 并且
 $$
 \int_A \tau \cdot \mathbb{E}(Y|X)~d\mathbb{P} = \int_A \tau Y ~d\mathbb{P}, \quad A \in\sigma(X)
 $$
@@ -68,6 +69,37 @@ $$
 
 
 
+**性质3.(最优性)**  $\mathbb{E}\left[(Y-g(X))^2\right] \ge \mathbb{E}\left[(Y-\mathbb{E}[Y | X])^2\right]$ , 等号当且仅当 $g(X)=\mathbb{E}[Y | X], a.s.$
+
+**证明.** 假设 $Y, g(X) \in L^2(\Omega)$, 记 $m(X) = \mathbb{E}[Y | X]$. 把误差写成 $Y-g(X)= (Y-m(X)) + (m(X)-g(X))$, 因此
+$$
+\mathbb E[(Y-g(X))^2] = \mathbb E[(Y-m(X))^2] +2\mathbb E[(Y-m(X))(m(X)-g(X))] +\mathbb E[(m(X)-g(X))^2].
+$$
+下面证明交叉项为 $0$,
+$$
+\begin{aligned}
+\mathbb E[(Y-m(X))(m(X)-g(X))] &=\mathbb E\!\left[ \mathbb E[(Y-m(X))(m(X)-g(X))| X] \right]\\ &=\mathbb E\!\left[ (m(X)-g(X))\mathbb E[Y-m(X)| X] \right]=0, \end{aligned}
+$$
+最后一步是因为 \[ \mathbb E[Y-m(X)| X] =\mathbb E[Y| X]-m(X)=0. \] 所以得到
+\[
+\mathbb E[(Y-g(X))^2] = \mathbb E[(Y-\mathbb E[Y| X])^2] +\mathbb E[(\mathbb E[Y| X]-g(X))^2].
+\]
+ 右侧最后一项非负, 因此最优性成立. 等号成立当且仅当这一项为零, 即 \[ g(X)=\mathbb E[Y| X]\quad\text{a.s.} \]
+
+
+
+**性质4.** 对于 $\phi$ 为凸函数, $\phi(\mathbb{E}[Y | X]) \le \mathbb{E}[\phi(Y) | X]$
+
+**证明.** 记 \[ m=\mathbb E[Y| X]. \]
+
+对任意固定的 $a$, 存在一个斜率 $s_a$, 使得 \[ \phi(y)\ge \phi(a)+s_a(y-a),\quad \forall y. \] 代入 $y=Y$,
+$$
+\mathbb E[\phi(Y)| X] \ge \mathbb E[\phi(a)+s_a(Y-a)| X] =\phi(a)+s_a(m-a).
+$$
+凸函数满足 \[ \phi(t)=\sup_{a\in\mathbb Q}\{\phi(a)+s_a(t-a)\}. \] 所以
+\[
+\mathbb E[\phi(Y)| X] \ge \sup_{a\in\mathbb Q}\{\phi(a)+s_a(m-a)\} =\phi(m) =\phi(\mathbb E[Y| X]).
+\]
 
 
 **离散情形.** 假设 $Y$ 是一个离散随机变量, 只能取可数个值 $y_1, y_2, y_3, \dots$.

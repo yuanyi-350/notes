@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), {
     name: 'markdown-pages',
     configureServer(server) {
-      const roots = new Map(siteConfig.courses.map(course => [course.id, resolve(course.notesDirectory)]))
+      const roots = new Map(siteConfig.courses.filter(course => course.notesDirectory).map(course => [course.id, resolve(course.notesDirectory!)]))
       server.watcher.add([...roots.values()])
       server.watcher.on('all', async (_event, path) => {
         if (![...roots.values()].some(root => path.startsWith(root + sep))) return
@@ -37,7 +37,7 @@ export default defineConfig({
           const template = await server.transformIndexHtml(path, await readFile(resolve('index.html'), 'utf8'))
           const { renderRequest } = await server.ssrLoadModule('/scripts/render.tsx')
           const html = await renderRequest(template, path)
-          if (!html) { res.statusCode = 404; res.end('未找到这篇笔记'); return }
+          if (!html) { res.statusCode = 404; res.end('未找到这个页面'); return }
           res.setHeader('Content-Type', 'text/html; charset=utf-8')
           res.end(html)
         } catch (error) { next(error) }
